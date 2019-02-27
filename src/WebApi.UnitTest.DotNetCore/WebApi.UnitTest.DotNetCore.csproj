@@ -6,12 +6,13 @@
     <Company />
     <Product>WebApi.UnitTest</Product>
     <Description>webapi接口单元测试辅助</Description>
-    <Version>1.0.0.1</Version>
+    <Version>1.0.1.0</Version>
     <PackageLicenseUrl>https://github.com/zouql/WebApi.UnitTest/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/zouql/WebApi.UnitTest</PackageProjectUrl>
     <Copyright>Copyright © zouql 2019</Copyright>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageReleaseNotes />
   </PropertyGroup>
 
   <ItemGroup>
