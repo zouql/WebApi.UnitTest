@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>zouql</Authors>
+    <Company />
+    <Product>WebApi.UnitTest</Product>
+    <Description>webapi接口单元测试辅助</Description>
+    <Version>1.0.0.1</Version>
+    <RepositoryUrl>https://github.com/zouql/WebApi.UnitTest.git</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
