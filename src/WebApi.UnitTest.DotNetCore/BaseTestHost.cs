@@ -14,10 +14,19 @@
     using Microsoft.Extensions.DependencyInjection;
     using Newtonsoft.Json.Linq;
 
+    /// <summary>
+    /// 测试基类
+    /// </summary>
     public abstract class BaseTestHost : IDisposable
     {
+        /// <summary>
+        /// Json媒体类
+        /// </summary>
         protected readonly string JsonmMediaType = "application/json";
 
+        /// <summary>
+        /// HttpClint实例
+        /// </summary>
         protected HttpClient Client { get; private set; }
 
         /// <summary>
@@ -97,6 +106,13 @@
             return true;
         }
 
+        /// <summary>
+        /// Get请求
+        /// </summary>
+        /// <param name="requestUri">请求Url</param>
+        /// <param name="requestParams">Url参数</param>
+        /// <param name="requestHeaders">Header参数</param>
+        /// <returns></returns>
         protected async Task<HttpResponseMessage> GetAsync(
             string requestUri,
             IDictionary<string, string> requestParams = null,
@@ -122,6 +138,14 @@
             return response;
         }
 
+        /// <summary>
+        /// POST请求
+        /// </summary>
+        /// <param name="requestUri">请求Url</param>
+        /// <param name="requestParams">Body参数</param>
+        /// <param name="requestHeaders">Header参数</param>
+        /// <param name="mediaType">媒体类型(默认为Json格式)</param>
+        /// <returns></returns>
         protected async Task<HttpResponseMessage> PostAsync(
             string requestUri,
             JObject requestParams = null,
