@@ -18,7 +18,7 @@
     {
         protected readonly string JsonmMediaType = "application/json";
 
-        private static HttpClient HostClient;
+        protected HttpClient Client { get; private set; }
 
         /// <summary>
         /// 环境变量名
@@ -32,7 +32,7 @@
 
         void IDisposable.Dispose()
         {
-            HostClient?.Dispose();
+            Client?.Dispose();
         }
 
         /// <summary>
@@ -54,7 +54,7 @@
                 }
             }
 
-            HostClient = server.CreateClient();
+            Client = server.CreateClient();
         }
 
         /// <summary>
@@ -71,9 +71,9 @@
                 return false;
             }
 
-            HostClient.DefaultRequestHeaders.Remove("Cookie");
+            Client.DefaultRequestHeaders.Remove("Cookie");
 
-            HostClient.DefaultRequestHeaders.Add("Cookie", cookies);
+            Client.DefaultRequestHeaders.Add("Cookie", cookies);
 
             return true;
         }
@@ -90,9 +90,9 @@
                 return false;
             }
 
-            HostClient.DefaultRequestHeaders.Remove("Cookie");
+            Client.DefaultRequestHeaders.Remove("Cookie");
 
-            HostClient.DefaultRequestHeaders.Add("Cookie", cookies);
+            Client.DefaultRequestHeaders.Add("Cookie", cookies);
 
             return true;
         }
@@ -109,14 +109,14 @@
 
             foreach (var item in requestHeaders ?? new Dictionary<string, string>())
             {
-                HostClient.DefaultRequestHeaders.Remove(item.Key);
+                Client.DefaultRequestHeaders.Remove(item.Key);
             }
 
-            var response = await HostClient.GetAsync(requestUri);
+            var response = await Client.GetAsync(requestUri);
 
             foreach (var item in requestHeaders ?? new Dictionary<string, string>())
             {
-                HostClient.DefaultRequestHeaders.Add(item.Key, item.Value);
+                Client.DefaultRequestHeaders.Add(item.Key, item.Value);
             }
 
             return response;
@@ -130,7 +130,7 @@
         {
             foreach (var item in requestHeaders ?? new Dictionary<string, string>())
             {
-                HostClient.DefaultRequestHeaders.Remove(item.Key);
+                Client.DefaultRequestHeaders.Remove(item.Key);
             }
 
             var content = new StringContent(
@@ -138,11 +138,11 @@
                 encoding: Encoding.UTF8,
                 mediaType: JsonmMediaType);
 
-            var response = await HostClient.PostAsync(requestUri, content);
+            var response = await Client.PostAsync(requestUri, content);
 
             foreach (var item in requestHeaders ?? new Dictionary<string, string>())
             {
-                HostClient.DefaultRequestHeaders.Add(item.Key, item.Value);
+                Client.DefaultRequestHeaders.Add(item.Key, item.Value);
             }
 
             return response;
