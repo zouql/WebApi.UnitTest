@@ -5,7 +5,7 @@
     <Authors>zouql</Authors>
     <Company />
     <Product>WebApi.UnitTest</Product>
-    <Description>webapi接口单元测试辅助</Description>
+    <Description>webapi接口单元测试辅助类库（netstandard）</Description>
     <Version>1.0.1.1</Version>
     <PackageLicenseUrl>https://github.com/zouql/WebApi.UnitTest/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/zouql/WebApi.UnitTest</PackageProjectUrl>
