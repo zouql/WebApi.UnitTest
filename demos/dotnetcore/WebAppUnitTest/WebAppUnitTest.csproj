@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\WebApi.UnitTest.DotNetCore\WebApi.UnitTest.DotNetCore.csproj" />
+    <ProjectReference Include="..\..\..\src\WebApi.UnitTest.DotNetCore\WebApi.UnitTest.DotNetCore.csproj" />
     <ProjectReference Include="..\WebApp\WebApp.csproj" />
   </ItemGroup>
 
