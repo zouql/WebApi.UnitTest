@@ -1,9 +1,9 @@
-﻿namespace WebApp.Controllers
+﻿namespace WebApp30.Controllers
 {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using WebApp.Accounts;
+    using WebApp30.Accounts;
 
     [Route("api/[controller]/[action]")]
     [ApiController]

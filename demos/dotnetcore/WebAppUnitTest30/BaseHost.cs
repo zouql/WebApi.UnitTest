@@ -1,16 +1,10 @@
-namespace WebAppUnitTest
+namespace WebAppUnitTest30
 {
     using System.Threading.Tasks;
-    using Microsoft.Extensions.DependencyInjection;
     using WebApi.UnitTest.DotNetCore;
-    using WebApp.Accounts;
 
     public class BaseHost : BaseTestHost
     {
-        private static readonly string UserName = "Admin";
-
-        private static readonly string PassWord = "Aa_123456";
-        
         /// <summary>
         /// 环境变量名
         /// </summary>
@@ -19,11 +13,11 @@ namespace WebAppUnitTest
         /// <summary>
         /// 启动项目名
         /// </summary>
-        protected override string StartProjectName => nameof(WebApp);
+        protected override string StartProjectName => nameof(WebApp30);
 
         public BaseHost()
         {
-            StartHost<WebApp.Startup>();
+            StartHost<WebApp30.Startup>();
         }
 
         /// <summary>
@@ -36,7 +30,7 @@ namespace WebAppUnitTest
         {
             await CreateOrUpdateAsync(userName, passWord);
 
-            var url = $"api/Account/SignInForIdentityAsync?userName={userName}&passWord={passWord}";
+            var url = $"api/Account/SignInForIdentity?userName={userName}&passWord={passWord}";
 
             var response = await GetAsync(url);
 
@@ -51,11 +45,11 @@ namespace WebAppUnitTest
         /// <returns></returns>
         private async Task CreateOrUpdateAsync(string userName, string passWord)
         {
-            var url = $"api/Account/CreateOrUpdateAsync?userName={userName}&passWord={passWord}";
+            var url = $"api/Account/CreateOrUpdate?userName={userName}&passWord={passWord}";
 
             var response = await GetAsync(url);
 
-            if (!response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode) 
             {
                 throw new System.Exception(response.StatusCode.ToString());
             }

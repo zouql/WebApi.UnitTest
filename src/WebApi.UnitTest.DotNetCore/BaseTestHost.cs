@@ -7,11 +7,14 @@
     using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
+    using Autofac.Extensions.DependencyInjection;
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Hosting.Server;
     using Microsoft.AspNetCore.TestHost;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
     using Newtonsoft.Json.Linq;
 
     /// <summary>
@@ -19,6 +22,8 @@
     /// </summary>
     public abstract class BaseTestHost : IDisposable
     {
+        private TestServer server;
+
         /// <summary>
         /// Json媒体类
         /// </summary>
@@ -42,26 +47,17 @@
         void IDisposable.Dispose()
         {
             Client?.Dispose();
+
+            server?.Dispose();
         }
 
         /// <summary>
         /// 启动站点
         /// </summary>
         /// <typeparam name="TStartup">启动类</typeparam>
-        /// <param name="serviceActiton">启动设置</param>
-        protected void StartHost<TStartup>(Action<IServiceProvider> serviceActiton = null) where TStartup : class
+        protected void StartHost<TStartup>() where TStartup : class
         {
-            var server = new TestServer(CreateWebHostBuilder<TStartup>());
-            
-            if (serviceActiton != null)
-            {
-                using (var scope = server.Host.Services.CreateScope())
-                {
-                    var services = scope.ServiceProvider;
-
-                    serviceActiton(services);
-                }
-            }
+            server = CreateTestServer<TStartup>();
 
             Client = server.CreateClient();
         }
@@ -160,7 +156,7 @@
             var content = new StringContent(
                 requestParams?.ToString(),
                 encoding: Encoding.UTF8,
-                mediaType: JsonmMediaType);
+                mediaType: mediaType);
 
             var response = await Client.PostAsync(requestUri, content);
 
@@ -172,7 +168,7 @@
             return response;
         }
 
-        private IWebHostBuilder CreateWebHostBuilder<TStartup>() where TStartup : class
+        private TestServer CreateTestServer<TStartup>() where TStartup : class
         {
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", EnvironmentName);
 
@@ -182,12 +178,37 @@
                 .AddJsonFile("apphosting.json", optional: true)
                 .AddJsonFile($"apphosting.{EnvironmentName}.json", optional: true);
 
+#if NETSTANDARD2_0
             var host = WebHost.CreateDefaultBuilder()
                 .UseConfiguration(configuration.Build())
                 .UseContentRoot(Environment.CurrentDirectory)
                 .UseStartup<TStartup>();
 
-            return host;
+            server = new TestServer(host);
+#endif
+
+#if NETCOREAPP3_0
+            var host = Host.CreateDefaultBuilder()
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder
+                    .UseConfiguration(configuration.Build())
+                    .UseContentRoot(Environment.CurrentDirectory)
+                    .ConfigureServices(services =>
+                    {
+                        services.AddSingleton<IServer>(serviceProvider => new TestServer(serviceProvider));
+                    })
+                    .UseStartup<TStartup>();
+                })
+                .Build();
+
+            host.Start();
+
+            server = host.GetTestServer();
+#endif
+
+            return server;
         }
 
         private static string GetProjectPath(string csprojName)
