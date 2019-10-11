@@ -7,14 +7,16 @@
     using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
+#if NETCOREAPP3_0
     using Autofac.Extensions.DependencyInjection;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.AspNetCore.Hosting.Server;
+    using Microsoft.Extensions.Hosting;
+#endif
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Hosting.Server;
     using Microsoft.AspNetCore.TestHost;
     using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Hosting;
     using Newtonsoft.Json.Linq;
 
     /// <summary>
@@ -23,11 +25,6 @@
     public abstract class BaseTestHost : IDisposable
     {
         private TestServer server;
-
-        /// <summary>
-        /// Json媒体类
-        /// </summary>
-        protected readonly string JsonmMediaType = "application/json";
 
         /// <summary>
         /// HttpClint实例
@@ -138,25 +135,25 @@
         /// POST请求
         /// </summary>
         /// <param name="requestUri">请求Url</param>
-        /// <param name="requestParams">Body参数</param>
         /// <param name="requestHeaders">Header参数</param>
-        /// <param name="mediaType">媒体类型(默认为Json格式)</param>
+        /// <param name="requestParams">Body参数</param>
         /// <returns></returns>
         protected async Task<HttpResponseMessage> PostAsync(
             string requestUri,
-            JObject requestParams = null,
             IDictionary<string, string> requestHeaders = null,
-            string mediaType = "application/json")
+            IEnumerable<KeyValuePair<string, string>> requestParams = null)
         {
             foreach (var item in requestHeaders ?? new Dictionary<string, string>())
             {
                 Client.DefaultRequestHeaders.Remove(item.Key);
             }
 
-            var content = new StringContent(
-                requestParams?.ToString(),
-                encoding: Encoding.UTF8,
-                mediaType: mediaType);
+            var content = new MultipartFormDataContent();
+
+            foreach (var item in requestParams ?? new Dictionary<string,string>())
+            {
+                content.Add(new StringContent(item.Value), item.Key);
+            }
 
             var response = await Client.PostAsync(requestUri, content);
 

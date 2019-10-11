@@ -7,10 +7,6 @@ namespace WebAppUnitTest
 
     public class BaseHost : BaseTestHost
     {
-        private static readonly string UserName = "Admin";
-
-        private static readonly string PassWord = "Aa_123456";
-        
         /// <summary>
         /// 环境变量名
         /// </summary>
