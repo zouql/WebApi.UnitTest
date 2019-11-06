@@ -51,10 +51,10 @@
         /// <returns></returns>
         protected async Task<HttpResponseMessage> GetAsync(
             string requestUri,
-            IDictionary<string, string> requestParams = null,
-            IDictionary<string, string> requestHeaders = null)
+            IDictionary<string, string> requestParams = default,
+            IDictionary<string, string> requestHeaders = default)
         {
-            if (requestParams != null && requestHeaders.Count > 0)
+            if (requestParams != default && requestParams.Count > 0)
             {
                 requestUri = $"{requestUri}?{string.Join("&", requestParams.Select(m => $"{m.Key}={m.Value}"))}";
             }
@@ -84,8 +84,8 @@
         /// <returns></returns>
         protected async Task<HttpResponseMessage> PostAsync(
             string requestUri,
-            JObject requestParams = null,
-            IDictionary<string, string> requestHeaders = null,
+            JObject requestParams = default,
+            IDictionary<string, string> requestHeaders = default,
             string mediaType = "application/json")
         {
             foreach (var item in requestHeaders ?? new Dictionary<string, string>())

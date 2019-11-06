@@ -66,7 +66,7 @@
         {
             response.Headers.TryGetValues("Set-Cookie", out var cookies);
 
-            if (cookies == null || cookies.Count() == 0)
+            if (cookies == default || cookies.Count() == 0)
             {
                 return false;
             }
@@ -85,7 +85,7 @@
         /// <returns></returns>
         protected bool AddOrUpdateCookies(IEnumerable<string> cookies)
         {
-            if (cookies == null || cookies.Count() == 0)
+            if (cookies == default || cookies.Count() == 0)
             {
                 return false;
             }
@@ -106,10 +106,10 @@
         /// <returns></returns>
         protected async Task<HttpResponseMessage> GetAsync(
             string requestUri,
-            IDictionary<string, string> requestParams = null,
-            IDictionary<string, string> requestHeaders = null)
+            IDictionary<string, string> requestParams = default,
+            IDictionary<string, string> requestHeaders = default)
         {
-            if (requestParams != null && requestHeaders.Count > 0)
+            if (requestParams != default && requestParams.Count > 0)
             {
                 requestUri = $"{requestUri}?{string.Join("&", requestParams.Select(m => $"{m.Key}={m.Value}"))}";
             }
@@ -138,8 +138,8 @@
         /// <returns></returns>
         protected async Task<HttpResponseMessage> PostAsync(
             string requestUri,
-            IDictionary<string, string> requestHeaders = null,
-            IEnumerable<KeyValuePair<string, string>> requestParams = null)
+            IDictionary<string, string> requestHeaders = default,
+            IEnumerable<KeyValuePair<string, string>> requestParams = default)
         {
             foreach (var item in requestHeaders ?? new Dictionary<string, string>())
             {
